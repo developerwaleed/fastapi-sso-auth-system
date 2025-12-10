@@ -1,0 +1,604 @@
+{
+  "info": {
+    "name": "FastAPI SSO & Authorization System",
+    "description": "Complete API collection for testing FastAPI SSO authentication and authorization system with JWT and API Keys",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "jwt_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "role_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "permission_id",
+      "value": "1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Root",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Google Login - Get Authorization URL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/google/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "google", "login"]
+            },
+            "description": "Get Google OAuth authorization URL. Copy the URL and open in browser to complete OAuth flow."
+          }
+        },
+        {
+          "name": "GitHub Login - Get Authorization URL",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/github/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "github", "login"]
+            },
+            "description": "Get GitHub OAuth authorization URL. Copy the URL and open in browser to complete OAuth flow."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Current User (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "me"]
+            },
+            "description": "Get current authenticated user profile using JWT token"
+          }
+        },
+        {
+          "name": "List All Users (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", ""]
+            }
+          }
+        },
+        {
+          "name": "Assign Role to User (JWT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/roles/{{role_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "{{user_id}}", "roles", "{{role_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Remove Role from User (JWT)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{{user_id}}/roles/{{role_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "users", "{{user_id}}", "roles", "{{role_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Keys",
+      "item": [
+        {
+          "name": "Create API Key (JWT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"My Test API Key\",\n  \"description\": \"API key for testing endpoints\",\n  \"expires_at\": null,\n  \"role_ids\": [1],\n  \"permission_ids\": []\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api-keys/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys", ""]
+            },
+            "description": "Create a new API key. Save the returned key immediately!"
+          }
+        },
+        {
+          "name": "List My API Keys (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-keys/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys", ""]
+            }
+          }
+        },
+        {
+          "name": "Get API Key Details (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-keys/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys", "1"]
+            }
+          }
+        },
+        {
+          "name": "Deactivate API Key (JWT)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-keys/1/deactivate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys", "1", "deactivate"]
+            }
+          }
+        },
+        {
+          "name": "Activate API Key (JWT)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-keys/1/activate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys", "1", "activate"]
+            }
+          }
+        },
+        {
+          "name": "Delete API Key (JWT)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api-keys/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "api-keys", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Roles & Permissions",
+      "item": [
+        {
+          "name": "Create Permission (JWT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"users:read\",\n  \"description\": \"Read user data\",\n  \"resource\": \"users\",\n  \"action\": \"read\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/roles/permissions/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "permissions", ""]
+            }
+          }
+        },
+        {
+          "name": "List Permissions (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/roles/permissions/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "permissions", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Role (JWT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"admin\",\n  \"description\": \"Administrator role with full access\",\n  \"permission_ids\": [1, 2, 3]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/roles/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", ""]
+            }
+          }
+        },
+        {
+          "name": "List Roles (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/roles/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Role Details (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/roles/{{role_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "{{role_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Add Permission to Role (JWT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/roles/{{role_id}}/permissions/{{permission_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "roles", "{{role_id}}", "permissions", "{{permission_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Example Endpoints",
+      "item": [
+        {
+          "name": "Public Endpoint (No Auth)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/demo/public",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "examples", "public"]
+            },
+            "description": "No authentication required"
+          }
+        },
+        {
+          "name": "JWT Only Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/demo/jwt-only",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "examples", "jwt-only"]
+            },
+            "description": "Requires JWT token only. API keys will NOT work."
+          }
+        },
+        {
+          "name": "API Key Only Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/demo/apikey-only",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "examples", "apikey-only"]
+            },
+            "description": "Requires API Key only. JWT tokens will NOT work."
+          }
+        },
+        {
+          "name": "Either Auth Endpoint (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/demo/either-auth",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "examples", "either-auth"]
+            },
+            "description": "Accepts either JWT or API Key authentication"
+          }
+        },
+        {
+          "name": "Either Auth Endpoint (API Key)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/demo/either-auth",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "examples", "either-auth"]
+            },
+            "description": "Accepts either JWT or API Key authentication"
+          }
+        },
+        {
+          "name": "Admin Only (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/demo/admin-only",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "examples", "admin-only"]
+            },
+            "description": "Requires 'admin' role"
+          }
+        },
+        {
+          "name": "Admin Only (API Key)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/demo/admin-only",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "examples", "admin-only"]
+            },
+            "description": "Requires 'admin' role via API Key"
+          }
+        },
+        {
+          "name": "Read Users Permission (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/demo/read-users-permission",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "examples", "read-users-permission"]
+            },
+            "description": "Requires 'users:read' permission"
+          }
+        },
+        {
+          "name": "Write Users Permission (JWT)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{jwt_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/demo/write-users-permission",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "examples", "write-users-permission"]
+            },
+            "description": "Requires 'users:write' permission"
+          }
+        }
+      ]
+    }
+  ]
+}
+
